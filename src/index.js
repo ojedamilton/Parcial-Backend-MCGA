@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const dotenv = require("dotenv");
 const mongoose = require('mongoose');
+const routes = require('./routes/Products');
 
 dotenv.config();
 // Middleware Json
@@ -17,3 +18,5 @@ mongoose.connect(process.env.CONECTION_URL)
     console.log("🔴 There was an error on the DB connection method.");
     console.log(err);
 }); 
+
+app.use('/',routes);
