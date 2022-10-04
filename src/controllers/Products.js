@@ -11,7 +11,7 @@ const createProduct = (req, res) => {
 
 // GET ALL PRODUCTS
 const getAll = (req, res) => {
-Products.find()
+Products.find({isDeleted:false})
     .then((data) => res.status(200).json({msg:"All Products",data,error:false }))
     .catch((err) => res.status(500).json({ msg: `Error: ${err}`,data:{},error:true }));
 }
@@ -19,7 +19,10 @@ Products.find()
 const getById = (req, res) => {
     const { _id } = req.params;
     Products.findById(parseInt(_id))
-        .then((data) => res.status(200).json({msg:"Product By Id",data,error:false }))
+        .then((data) => { 
+             if(!data) return res.status(404).json({ msg: `Products not found by ID: ${id}`,data:{},error:true });         
+             return res.status(200).json({msg:"Product By Id",data,error:false })
+         })
         .catch((err) => res.status(500).json({ msg: `Error: ${err}`,data:{},error:true }));
     }
 // REMOVE PROVIDER
@@ -27,7 +30,7 @@ const removeProduct = (req, res) => {
 const { _id } = req.params;
 Products.findByIdAndUpdate( parseInt(_id), { isDeleted: true }, { new: true })
     .then((data) => {
-    if (data.length === 0) return res.status(404).json({ msg: `Products not found by ID: ${id}`,data:{},error:true });
+    if (!data) return res.status(404).json({ msg: `Products not found by ID: ${id}`,data:{},error:true });
     return res.status(202).json({ msg: "Products deleted", data ,error:false});
     })
     .catch((err) => res.status(500).json({ msg: `Error: ${err}` ,data:{},error:true}));
@@ -38,7 +41,7 @@ const updateProduct= (req, res) => {
 const { _id } = req.params;
 Products.findByIdAndUpdate(parseInt(_id), req.body, { new: true })
     .then((data) => {
-    if (data.length === 0) return res.status(404).json({ msg: `Products not found by ID: ${_id}`,data:{},error:true });
+    if (!data) return res.status(404).json({ msg: `Products not found by ID: ${_id}`,data:{},error:true });
     return res.status(202).json({ msg: "Products updated", data , error:false });
     })
     .catch((err) => res.status(500).json({ msg: `Error: ${err}` ,data:{},error:true }));

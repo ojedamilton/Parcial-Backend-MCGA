@@ -23,6 +23,10 @@ const ProductsSchemas = new Schema({
     description:{
         type: String,
         maxlenght: 200,
+    },
+    isDeleted:{
+        type: Boolean,
+        default: false
     }
 })
 
