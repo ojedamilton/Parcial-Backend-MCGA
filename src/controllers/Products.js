@@ -42,7 +42,11 @@ const updateProduct = (req, res) => {
     Products.findByIdAndUpdate(parseInt(_id), req.body, { new: true })
         .then((data) => {
             if (!data || data.length === 0) return res.status(404).json({ msg: `Product not found by ID: ${_id}`, data: {}, error: true });
-            return res.status(202).json({ msg: "Product updated", data, error: false });
+            //return res.status(202).json({ msg: "Product updated", data, error: false });
+            Products.find({isDeleted: false})
+            .then((data) => res.status(202).json({ msg: "All Products", data, error: false }))
+
+            .catch((err) => res.status(500).json({ msg: `Error: ${err}`, data: {}, error: true }));
         })
         .catch((err) => res.status(500).json({ msg: `Error: ${err}`, data: {}, error: true }));
 };
