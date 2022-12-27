@@ -1,5 +1,5 @@
-const { Decimal128 } = require('bson');
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+// import Decimal128 from 'mongoose';
 
 const { Schema } = mongoose;
 
@@ -10,15 +10,17 @@ const ProductsSchemas = new Schema({
     name:{
         type: String,
         required: true,
-        maxlenght: 30
+        maxlenght: 50
     },
     price:{
-        type: Decimal128,
-        maxlenght: 50,
+        type: Number,
+        maxlenght: 14,
+        min: 0,
     },
     stock:{
         type: Number,
-        maxlenght: 50,
+        maxlenght: 14,
+        min: 0,
     },
     description:{
         type: String,
@@ -28,6 +30,6 @@ const ProductsSchemas = new Schema({
         type: Boolean,
         default: false
     }
-})
+});
 
-module.exports = mongoose.model("Products", ProductsSchemas);
+export default mongoose.model("Products", ProductsSchemas);

@@ -1,20 +1,13 @@
-const express = require('express');
+import express from 'express';
+import productsControllers from '../controllers/Products.js';
+import checkAuth from '../middlewares/authMiddleware.js';
+
 const router = express.Router();
-const {getAll,createProduct,updateProduct,removeProduct,getById} = require('../controllers/Products');
 
-// PING
-router.get('/',(req,res)=>res.send('DB Connected Succesfuly'));
-// ALL PRODUCTS  
-router.get('/products',getAll);
-// PRODUCTS BY ID
-router.get('/product/:_id',getById);
-//  CREATE PRODUCT
-router.post('/product/add',createProduct);
-// UPDATE PRODUCT
-router.put('/product/update/:_id',updateProduct);
-// DELETE PRODUCT
-router.delete('/product/delete/:_id',removeProduct);
+router.get('/', productsControllers.getAll);
+router.get('/:_id', productsControllers.getId);
+router.post('/add', checkAuth(), productsControllers.postProduct);
+router.put('/update/:_id', checkAuth(), productsControllers.updateProduct);
+router.delete('/delete/:_id', checkAuth(), productsControllers.deleteProduct);
 
-
-
-module.exports=router;
+export default router;

@@ -1,24 +1,34 @@
-const express = require('express');
-const app = express();
-const dotenv = require("dotenv");
-const mongoose = require('mongoose');
-const cors = require('cors');
-const routes = require('./routes/Products');
+import mongoose from 'mongoose';
+import express from 'express';
+import cors from 'cors';
+import routes from './routes/index.js';
 
-dotenv.config();
-// Middleware Json
+const app = express();
+
 app.use(express.json());
 app.use(cors());
-// Assign Port
-app.listen(process.env.PORT,()=> console.log(`server on port 4000`));
+app.use('/api', routes);
+import { config } from "dotenv";
+config({ path: process.ENV })
+app.get('/', async (req, res) => {
+  res.send('OK. Backend is working!');
+});
 
-mongoose.connect(process.env.CONECTION_URL)
-  .then(() => {
-    console.log("🟢 DB Connected");
-  })
- .catch((err) => {
-    console.log("🔴 There was an error on the DB connection method.");
-    console.log(err);
-}); 
 
-app.use('/',routes);
+
+const port = process.env.PORT;
+
+mongoose.connect(
+  process.env.CONECTION_URL,
+  (error) => {
+    if (error) {
+      console.log('Fails connection to database', error);
+    } else {
+      console.log('Connected to database');
+      app.listen(port, () => {
+        console.log(`Server ready on port ${port}`);
+      });
+    }
+  },
+);
+
